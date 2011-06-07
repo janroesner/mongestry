@@ -1,18 +1,18 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 def initialize_country_tree
-  root        = Category.create(name: "Root",        persisted_depth: 0)
-  germany     = Category.create(name: "Germany",     persisted_depth: 1, ancestry: "#{root.id}")
-  switzerland = Category.create(name: "Switzerland", persisted_depth: 1, ancestry: "#{root.id}")
-  austria     = Category.create(name: "Austria",     persisted_depth: 1, ancestry: "#{root.id}")
-  berlin      = Category.create(name: "Berlin",      persisted_depth: 2, ancestry: "#{root.id}/#{germany.id}")
-  munich      = Category.create(name: "Munich",      persisted_depth: 2, ancestry: "#{root.id}/#{germany.id}")
-  hamburg     = Category.create(name: "Hamburg",     persisted_depth: 2, ancestry: "#{root.id}/#{germany.id}")
-  bern        = Category.create(name: "Bern",        persisted_depth: 2, ancestry: "#{root.id}/#{switzerland.id}")
-  zurich      = Category.create(name: "Zurich",      persisted_depth: 2, ancestry: "#{root.id}/#{switzerland.id}")
-  vienna      = Category.create(name: "Vienna",      persisted_depth: 2, ancestry: "#{root.id}/#{austria.id}")
-  graz        = Category.create(name: "Graz",        persisted_depth: 2, ancestry: "#{root.id}/#{austria.id}")
-  pankow      = Category.create(name: "Pankow",      persisted_depth: 3, ancestry: "#{root.id}/#{germany.id}/#{berlin.id}")
+  @root        = Category.create!(name: "Root",        persisted_depth: 0)
+  @germany     = Category.create!(name: "Germany",     persisted_depth: 1, ancestry: "#{@root.id}")
+  @switzerland = Category.create!(name: "Switzerland", persisted_depth: 1, ancestry: "#{@root.id}")
+  @austria     = Category.create!(name: "Austria",     persisted_depth: 1, ancestry: "#{@root.id}")
+  @berlin      = Category.create!(name: "Berlin",      persisted_depth: 2, ancestry: "#{@root.id}/#{@germany.id}")
+  @munich      = Category.create!(name: "Munich",      persisted_depth: 2, ancestry: "#{@root.id}/#{@germany.id}")
+  @hamburg     = Category.create!(name: "Hamburg",     persisted_depth: 2, ancestry: "#{@root.id}/#{@germany.id}")
+  @bern        = Category.create!(name: "Bern",        persisted_depth: 2, ancestry: "#{@root.id}/#{@switzerland.id}")
+  @zurich      = Category.create!(name: "Zurich",      persisted_depth: 2, ancestry: "#{@root.id}/#{@switzerland.id}")
+  @vienna      = Category.create!(name: "Vienna",      persisted_depth: 2, ancestry: "#{@root.id}/#{@austria.id}")
+  @graz        = Category.create!(name: "Graz",        persisted_depth: 2, ancestry: "#{@root.id}/#{@austria.id}")
+  @pankow      = Category.create!(name: "Pankow",      persisted_depth: 3, ancestry: "#{@root.id}/#{@germany.id}/#{@berlin.id}")
 end
 
 describe "Mongestry" do
@@ -20,6 +20,7 @@ describe "Mongestry" do
   before :all do
     Category.destroy_all
     initialize_country_tree
+    Category.class_eval{ has_mongestry }
   end
 
   describe 'has_mongestry' do
@@ -57,23 +58,51 @@ describe "Mongestry" do
   end
 
   describe 'ancestor_ids' do
-    it 'should return the ancestor_ids of the given node'
+    it 'should return the ancestor_ids of the given node' do
+      ids = Category.where(name:"Pankow").first.ancestor_ids
+
+      ids.size.should == 3
+      ids.include?(@berlin.id).should  be_true
+      ids.include?(@germany.id).should be_true
+      ids.include?(@root.id).should    be_true
+    end
   end
 
   describe 'ancestors' do
-    it 'should return ancestors of the given node scoped'
+    it 'should return ancestors of the given node scoped' do
+      ancestors = Category.where(name:"Pankow").first.ancestors.to_a
+
+      ancestors.size.should == 3
+      ancestors.include?(@berlin).should  be_true
+      ancestors.include?(@germany).should be_true
+      ancestors.include?(@root).should    be_true
+    end
   end
 
   describe 'parent' do
-    it 'should return the given nodes parent'
+    it 'should return the given nodes parent' do
+      Category.where(name: "Germany").first.parent.first.should == @root
+      Category.where(name: "Pankow").first.parent.first.should  == @berlin
+      Category.roots.first.parent.should be_nil
+    end
   end
 
   describe 'parent_id' do
-    it 'should return the given nodes parents id'
+    it 'should return the given nodes parents id' do
+      Category.where(name: "Germany").first.parent_id.should == @root.id
+      Category.where(name: "Pankow").first.parent_id.should  == @berlin.id
+      Category.roots.first.parent_id.should be_nil
+    end
   end
 
   describe 'root' do
-    it 'should return the root of the tree of the given node'
+    it 'should return the root of the tree of the given node' do
+      Category.where(name: "Pankow").first.root.first.should  eql @root
+      Category.where(name: "Berlin").first.root.first.should  eql @root
+      Category.where(name: "Germany").first.root.first.should eql @root
+      # #TODO
+      # Category.where(name: "Root").first.root.first.should    eql @root
+    end
   end
 
   describe 'root_id' do
