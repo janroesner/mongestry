@@ -1,8 +1,8 @@
-module MongoAncestry
+module Mongestry
 
   class << self.class.superclass
-    def has_mongo_ancestry
-      include MongoAncestry::InstanceMethods
+    def has_mongestry
+      include Mongestry::InstanceMethods
       field :ancestry, type: String
       before_create :build_ancestry
     end
@@ -11,7 +11,7 @@ module MongoAncestry
   module InstanceMethods
 
     def self.included base
-      base.extend MongoAncestry::ClassMethods
+      base.extend Mongestry::ClassMethods
     end
 
     def build_ancestry

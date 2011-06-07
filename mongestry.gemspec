@@ -4,7 +4,7 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{mongoancestry}
+  s.name = %q{mongestry}
   s.version = "0.0.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
@@ -24,15 +24,15 @@ Gem::Specification.new do |s|
     "README.rdoc",
     "Rakefile",
     "VERSION",
-    "lib/mongoancestry.rb",
-    "spec/mongoancestry_spec.rb",
+    "lib/mongestry.rb",
+    "spec/mongestry.rb",
     "spec/spec_helper.rb"
   ]
-  s.homepage = %q{http://github.com/DailyDeal/mongoancestry}
+  s.homepage = %q{http://github.com/DailyDeal/mongestry}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
-  s.summary = %q{MongoAncestry is Ancestry for Mongo}
+  s.summary = %q{Mongestry is Ancestry for Mongo}
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION

@@ -14,10 +14,10 @@ require 'rake'
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name = "mongoancestry"
-  gem.homepage = "http://github.com/DailyDeal/mongoancestry"
+  gem.name = "mongestry"
+  gem.homepage = "http://github.com/DailyDeal/mongestry"
   gem.license = "MIT"
-  gem.summary = %Q{MongoAncestry is Ancestry for Mongo}
+  gem.summary = %Q{Mongestry is Ancestry for Mongo}
   gem.description = %Q{See summary}
   gem.email = "jan@roesner.it"
   gem.authors = ["Jan Roesner"]
