@@ -32,11 +32,11 @@ module Mongestry
     end
 
     def ancestors
-      self.class.find self.ancestor_ids
+      self.class.where self.ancestor_ids
     end
 
     def parent
-      self.class.find self.ancestry.split('/').last
+      self.class.where self.ancestry.split('/').last
     end
 
     def parent_id
@@ -44,11 +44,11 @@ module Mongestry
     end
 
     def root
-      self.class.find self.ancestry.split('/').first
+      self.class.where(_id: self.ancestry.split('/').first)
     end
 
     def root_id
-      self.root.id
+      self.root.first.id
     end
 
     def is_root?
@@ -78,6 +78,44 @@ module Mongestry
 
     def siblings
       self.class.where(:ancestry => self.ancestry.to_s).and((Mongoid::Criterion::Complex.new key: :_id, operator: 'ne') => self.id)
+    end
+
+    def sibling_ids
+      self.siblings.map(&:id)
+    end
+
+    def has_siblings?
+      !self.siblings.blank?
+    end
+
+    def is_only_child?
+      !self.has_siblings?
+    end
+
+    # Scopes the model on direct and indirect children of the record
+    def descendants
+      expression = self.is_root? ? self.id.to_s : (self.ancestry + "/#{self.id.to_s}").split('/').join('\/')
+      self.class.where(:ancestry => Regexp.new(expression))
+    end
+
+    # Returns a list of a descendant ids
+    def descendant_ids
+      self.descendants.map(&:id)
+    end
+
+    # Scopes the model on descendants and itself
+    def subtree
+      self.class.where(_id: {"$in" => self.descendant_ids.push(self.id)})
+    end
+
+    # Returns a list of all ids in the record's subtree
+    def subtree_ids
+      self.subtree.map(&:id)
+    end
+
+    # Return the depth of the node, root nodes are at depth 0
+    def depth
+      self.ancestry.split('/').size rescue 0
     end
 
     protected
