@@ -1,5 +1,9 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
+
+require 'mongoid'
+require File.expand_path(File.dirname(__FILE__) + "/support/connection")
+require File.expand_path(File.dirname(__FILE__) + "/support/category")
 require 'rspec'
 require 'mongestry'
 

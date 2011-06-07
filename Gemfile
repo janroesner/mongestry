@@ -6,6 +6,7 @@ source "http://rubygems.org"
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.
 
+gem 'bson_ext'
 gem 'mongoid'
 
 group :development do
@@ -14,5 +15,6 @@ group :development do
   gem "bundler", "~> 1.0.0"
   gem "jeweler", "~> 1.6.2"
   gem "rcov", ">= 0"
-  gem 'machinist_mongo', :require => 'machinist/mongoid'
+  gem 'linecache19', '0.5.11'
+  gem 'ruby-debug19'
 end
