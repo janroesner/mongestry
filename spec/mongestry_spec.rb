@@ -22,9 +22,172 @@ describe "Mongestry" do
     initialize_country_tree
   end
 
-  it 'should create some factory object' do
-    Category.create(name: "blue")
+  describe 'has_mongestry' do
 
-    Category.count.should == 13
+    it 'should include instance methods into class where invoked' do
+      class Foo
+        include Mongoid::Document
+        has_mongestry
+      end
+
+      [:build_ancestry, :ancestor_ids, :ancestors, :parent, :parent_id, :root, :root_id, :is_root?, :children, :child_ids, :has_children?, :is_childless?, :siblings, :sibling_ids, :has_siblings?, :is_only_child?, :descendants, :descendant_ids, :subtree, :subtree_ids, :depth, :parent_object].each do |method|
+        Foo.new.respond_to?(method).should be_true
+      end
+
+    end
+
+    it 'should include class methods into class where invoked' do
+      class Bar
+        include Mongoid::Document
+        has_mongestry
+      end
+
+      [:roots, :ancestors_of, :children_of, :descendants_of, :subtree_of, :siblings_of, :before_depth, :to_depth, :at_depth, :from_depth, :after_depth].each do |method|
+        Bar.respond_to?(method).should be_true
+      end
+    end
   end
+
+  describe 'build_ancestry' do
+    it 'should raise an error in case parent and parent_id were given'
+    it 'should set the ancestry string'
+    it 'should set persisted depth'
+    it 'should not persist the parent object when given'
+    it 'should not persist the parent_id when given'
+  end
+
+  describe 'ancestor_ids' do
+    it 'should return the ancestor_ids of the given node'
+  end
+
+  describe 'ancestors' do
+    it 'should return ancestors of the given node scoped'
+  end
+
+  describe 'parent' do
+    it 'should return the given nodes parent'
+  end
+
+  describe 'parent_id' do
+    it 'should return the given nodes parents id'
+  end
+
+  describe 'root' do
+    it 'should return the root of the tree of the given node'
+  end
+
+  describe 'root_id' do
+    it 'should return the id of the root of the tre of the given node'
+  end
+
+  describe 'is_root?' do
+    it 'should return true if given node is a root'
+    it 'should return flase if given node is no root'
+  end
+
+  describe 'children' do
+    it 'should return the given nodes children scoped'
+  end
+
+  describe 'child_ids' do
+    it 'should return the given nodes childs ids'
+  end
+
+  describe 'has_children?' do
+    it 'should return true if given node has children'
+    it 'should return false if given node has no children'
+  end
+
+  describe 'is_childless?' do
+    it 'should return true if given node has no children'
+    it 'should return false if given node has children'
+  end
+
+  describe 'siblings' do
+    it 'should return the given nodes siblings scoped'
+  end
+
+  describe 'sibling_ids' do
+    it 'should return the given nodes siblings ids'
+  end
+
+  describe 'has_siblings?' do
+    it 'should return true if given node has siblings'
+    it 'should return false if given node has no siblings'
+  end
+
+  describe 'is_only_child?' do
+    it 'should return true if given node has no siblings'
+    it 'should return false if given node has siblings'
+  end
+
+  describe 'descendants' do
+    it 'should return the given nodes descendants scoped'
+  end
+
+  describe 'descendant_ids' do
+    it 'should return the given nodes descendants ids'
+  end
+
+  describe 'subtree' do
+    it 'should return the given nodes subtree including the node itself'
+  end
+
+  describe 'subtree_ids' do
+    it 'should return the ids of the given nodes subtree including the code itself'
+  end
+
+  describe 'depth' do
+    it 'should return the computed depth of the given node'
+  end
+
+  describe 'parent_object' do
+    it 'should return the correct object if object was given'
+    it 'should return the correct object if object_id was given'
+  end
+
+  describe 'roots' do
+    it 'should return all available roots scoped'
+  end
+
+  describe 'ancestors_of node' do
+    it 'should return the given nodes ancestors scoped'
+  end
+
+  describe 'children_of node' do
+    it 'should return the given nodes children scoped'
+  end
+
+  describe 'descendants_of node' do
+    it 'should return the given nodes descendants scoped'
+  end
+
+  describe 'subtree_of node' do
+    it 'should return the given nodes subtree scoped'
+  end
+
+  describe 'siblings_of node' do
+    it 'should return the given nodes siblings scoped'
+  end
+
+  describe 'before_depth depth' do
+    it 'should return a scope finding objects with a depth less than given depth'
+  end
+
+  describe 'to_depth depth' do
+    it 'should return a scope finding objects with a depth less or equal than given depth'
+  end
+
+  describe 'at_depth depth' do
+    it 'should return a scope finding objects with that exact given depth'
+  end
+
+  describe 'from_depth depth' do
+    it 'should return a scope finding objects with a depth greater or equal than given depth'
+  end
+
+  describe 'after_depth depth' do
+    it 'should return a scope finding objects with a depth greater than given depth'
+  end
+
 end
