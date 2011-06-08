@@ -92,11 +92,10 @@ describe "Mongestry" do
 
     describe 'root' do
       it 'should return the root of the tree of the given node' do
-        Category.where(name: "Pankow").first.root.first.should  eql @root
-        Category.where(name: "Berlin").first.root.first.should  eql @root
-        Category.where(name: "Germany").first.root.first.should eql @root
-        # #TODO
-        # Category.where(name: "Root").first.root.first.should    eql @root
+        Category.where(name: "Pankow").first.root.should  eql @root
+        Category.where(name: "Berlin").first.root.should  eql @root
+        Category.where(name: "Germany").first.root.should eql @root
+        Category.where(name: "Root").first.root.should    eql @root
       end
     end
 
@@ -105,8 +104,7 @@ describe "Mongestry" do
         Category.where(name: "Pankow").first.root_id.should  eql @root.id
         Category.where(name: "Berlin").first.root_id.should  eql @root.id
         Category.where(name: "Germany").first.root_id.should eql @root.id
-        # TODO
-        # Category.where(name: "Root").first.root_id.should    eql @root.id
+        Category.where(name: "Root").first.root_id.should    eql @root.id
       end
     end
 

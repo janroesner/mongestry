@@ -51,12 +51,13 @@ module Mongestry
 
     # Returns the root of the tree the record is in, self for a root node
     def root
-      self.class.where(_id: self.ancestry.split('/').first)
+      return self if self.ancestry.nil?
+      self.class.where(_id: self.ancestry.split('/').first).first
     end
 
     # Returns the id of the root of the tree the record is in
     def root_id
-      self.root.first.id
+      self.root.id
     end
 
     # Returns true if the record is a root node, false otherwise
