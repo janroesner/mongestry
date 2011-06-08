@@ -41,7 +41,7 @@ You can use the parent attribute to organize your records into a tree. If you ha
 
     TreeNode.create! :name => 'Stinky', :parent => TreeNode.create!(:name => 'Squeeky')
 
-As of now you can **NOT** create children through the children relation on a node, so be patient, this will come in an upcoming release.
+As of now you can <b>NOT</b> create children through the children relation on a node, so be patient, this will come in an upcoming release.
 
 = Navigating your tree
 
@@ -115,7 +115,7 @@ Please note that depth constraints cannot be passed to ancestor_ids and path_ids
 
 = Tests
 
-The Mongestry gem comes with a RSpec test suite consisting of about 190 assertions in about 45 tests. It takes about 0.2 seconds to run on MongoDB. To run it yourself check out the repository from GitHub, check and fix \_spec/support/connection.rb_ to your needs and type:
+The Mongestry gem comes with a RSpec test suite consisting of about 190 assertions in about 45 tests. It takes about 0.2 seconds to run on MongoDB. To run it yourself check out the repository from GitHub, check and fix <em>spec/support/connection.rb</em> to your needs and type:
 
     rake
 
@@ -135,7 +135,7 @@ Compared to {Ancestry}[https://github.com/stefankroes/ancestry] there are some m
 
 - Creation of nodes through relational scopes
 - Integrity checking
-- options for _has_mongestry_ (don't know if we need any)
+- options for <em>has_mongestry</em> (don't know if we need any)
 - STI support
 - arrangement
 - sorting by ancestry
