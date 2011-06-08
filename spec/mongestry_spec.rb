@@ -275,10 +275,15 @@ describe "Mongestry" do
         Category.object_for(Category.where(name: "Germany").first).should     == @germany
         Category.object_for(Category.where(name: "Root").first).should        == @root
       end
-      it 'should return the correct object if object_id was given' do
+      it 'should return the correct object if object_id was given as BSON::ObjectId' do
         Category.object_for(Category.where(name: "Berlin").first.id).should      == @berlin
         Category.object_for(Category.where(name: "Germany").first.id).should     == @germany
         Category.object_for(Category.where(name: "Root").first.id).should        == @root
+      end
+      it 'should return the correct object if object_id was given as String' do
+        Category.object_for(Category.where(name: "Berlin").first.id.to_s).should      == @berlin
+        Category.object_for(Category.where(name: "Germany").first.id.to_s).should     == @germany
+        Category.object_for(Category.where(name: "Root").first.id.to_s).should        == @root
       end
     end
 
