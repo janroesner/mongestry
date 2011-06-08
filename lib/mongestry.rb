@@ -92,7 +92,7 @@ module Mongestry
 
     # Scopes the model on siblings of the record, the record itself is included
     def siblings
-      self.class.where(:ancestry => self.ancestry.to_s).and((Mongoid::Criterion::Complex.new key: :_id, operator: 'ne') => self.id)
+      self.class.where(:ancestry => self.ancestry.to_s).and(:_id => {'$ne' => self.id})
     end
 
     # Returns a list of sibling ids
@@ -102,7 +102,7 @@ module Mongestry
 
     # Returns true if the record's parent has more than one child
     def has_siblings?
-      !self.siblings.blank?
+      self.siblings.present?
     end
 
     # Returns true if the record is the only child of its parent
@@ -136,17 +136,15 @@ module Mongestry
       self.ancestry.split('/').size rescue 0
     end
 
-    protected
-
   end
 
   module ClassMethods
 
     def object_for identifier
-      case identifier.class.to_s
-      when "BSON::ObjectId"
+      case identifier
+      when BSON::ObjectId
         self.find identifier
-      when self.to_s
+      when self
         identifier
       end
     end
