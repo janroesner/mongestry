@@ -146,6 +146,8 @@ module Mongestry
       case identifier
       when BSON::ObjectId
         self.find identifier
+      when String
+        self.find(BSON::ObjectId.from_string(identifier))
       when self
         identifier
       end
