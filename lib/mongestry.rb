@@ -19,7 +19,7 @@ module Mongestry
       raise "Either parent or parent_id can be given, not both at once" if self.attributes.keys.include?("parent") and self.attributes.keys.include?("parent_id")
       return unless self.respond_to?(:parent) or self.respond_to?(:parent_id)
 
-      parent = self.object_for(self.attributes["parent"] || self.attributes["parent_id"])
+      parent = self.class.object_for(self.attributes["parent"] || self.attributes["parent_id"])
 
       self.ancestry = nil unless parent
       self.ancestry = parent.ancestry.nil? ? parent.id.to_s : parent.ancestry.to_s + "/#{parent.id.to_s}" if parent
