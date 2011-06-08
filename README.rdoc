@@ -1,14 +1,14 @@
-== Mongestry
+= Mongestry
 
 Mongestry is a gem/plugin that allows the records of a Ruby on Rails MongoDB model to be organized as a tree structure (or hierarchy). It uses a single, intuitively formatted database column, using a variation on the materialised path pattern. It exposes all the standard tree structure relations (ancestors, parent, root, children, siblings, descendants) and all of them can be fetched in a single query. Additional features are scopes, depth caching, depth constraints, easy migration from older plugins/gems.
 
 Mongestry is was inspired by the famous {Ancestry}[https://github.com/stefankroes/ancestry] Gem by {Stefan Kroes}[https://github.com/stefankroes]. It implements most of its functionality but lacks some. So be prepared.
 
-== Installation
+= Installation
 
 To apply Mongestry to any MongDB model, follow these simple steps:
 
-= Gem installation
+== Gem installation
 
 Add Mongestry to your app's Gemfile:
 
@@ -22,7 +22,7 @@ Add mongestry to your model via the following declarative line:
 
     has_mongestry
 
-= Example
+== Example
 
     class Category
       include Mongoid::Document
@@ -35,7 +35,7 @@ Add mongestry to your model via the following declarative line:
 
 Your model is now a tree!
 
-== Organizing records into a tree
+= Organizing records into a tree
 
 You can use the parent attribute to organize your records into a tree. If you have the id of the record you want to use as a parent and don't want to fetch it, you can also use parent_id. Like any virtual model attributes, parent and parent_id can be set using parent= and parent_id= on a record or by including them in the hash passed to new, create, create!. For example:
 
@@ -43,7 +43,7 @@ You can use the parent attribute to organize your records into a tree. If you ha
 
 As of now you can **NOT** create children through the children relation on a node, so be patient, this will come in an upcoming release.
 
-== Navigating your tree
+= Navigating your tree
 
 To navigate a Mongestry model, use the following methods on any instance / record:
 
@@ -68,11 +68,11 @@ To navigate a Mongestry model, use the following methods on any instance / recor
   subtree_ids      Returns a list of all ids in the record's subtree
   depth            Return the depth of the node, root nodes are at depth 0
 
-== Options for has_mongestry
+= Options for has_mongestry
 
 Currently there are none.
 
-== Scopes
+= Scopes
 
 Where possible, the navigation methods return scopes instead of records, this means additional ordering, conditions, limits, etc. can be applied and that the result can be either retrieved, counted or checked for existence. For example:
 
@@ -89,7 +89,7 @@ For convenience, a couple of named scopes are included at the class level:
     subtree_of(node)        # Subtree of node, node can be either a record or an id
     siblings_of(node)       # Siblings of node, node can be either a record or an id
 
-= Selecting nodes by depth
+== Selecting nodes by depth
 
 In Mongestry depth caching is enabled by default. Therefore five more scopes can be used to select nodes on their depth:
 
@@ -113,23 +113,23 @@ The depth scopes are also available through calls to descendants, descendant_ids
 
 Please note that depth constraints cannot be passed to ancestor_ids and path_ids. The reason for this is that both these relations can be fetched directly from the ancestry column without performing a database query. It would require an entirely different method of applying the depth constraints which isn't worth the effort of implementing. You can use ancestors(depth_options).map(&:id) or ancestor_ids.slice(min_depth..max_depth) instead.
 
-== Tests
+= Tests
 
-The Mongestry gem comes with a RSpec test suite consisting of about 190 assertions in about 45 tests. It takes about 0.2 seconds to run on MongoDB. To run it yourself check out the repository from GitHub, check and fix __spec/support/connection.rb__ to your needs and type:
+The Mongestry gem comes with a RSpec test suite consisting of about 190 assertions in about 45 tests. It takes about 0.2 seconds to run on MongoDB. To run it yourself check out the repository from GitHub, check and fix \_spec/support/connection.rb_ to your needs and type:
 
     rake
 
-== Internals
+= Internals
 
 As can be seen in the previous section, Mongestry stores a path from the root to the parent for every node. This is a variation on the materialised path database pattern. It allows Mongestry to fetch any relation (siblings, descendants, etc.) in a single db request without the complicated algorithms and incomprehensibility associated with left and right values. Additionally, any inserts, deletes and updates only affect nodes within the affected node's own subtree.
 
 In the example above, the ancestry field is created as a string. This puts a limitation on the depth of the tree of about 40 or 50 levels, which I think may be enough for most users. To increase the maximum depth of the tree, increase the size of the string that is being used or change it to a text to remove the limitation entirely. Changing it to a text will however decrease performance because an index cannot be put on the column in that case.
 
-== Limitations
+= Limitations
 
 Mongestry was created with Rails3 and Ruby >= 1.9.2 in mind. Sorry. You need Rails2 or Ruby prior to 1.9 support? Feel free to fork, fix and request a pull.
 
-== Missing Features
+= Missing Features
 
 Compared to {Ancestry}[https://github.com/stefankroes/ancestry] there are some missing features.
 
@@ -145,7 +145,7 @@ Compared to {Ancestry}[https://github.com/stefankroes/ancestry] there are some m
 - support for Ruby versions < 1.9
 - instance methods: path, path_ids
 
-== Contributing to Mongestry
+= Contributing to Mongestry
 
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
@@ -155,7 +155,7 @@ Compared to {Ancestry}[https://github.com/stefankroes/ancestry] there are some m
 * Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
 * Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
-== Copyright
+= Copyright
 
 Copyright (c) 2011 DailyDeal GmbH - Jan Roesner. See LICENSE.txt for
 further details.
