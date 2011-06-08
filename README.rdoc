@@ -18,8 +18,9 @@ Install required gems:
 
     bundle install
 
-Add mongestry to your model
-   - Add to app/models/[model].rb: **has_mongestry**
+Add mongestry to your model via the following declarative line:
+
+    has_mongestry
 
 = Example
 
