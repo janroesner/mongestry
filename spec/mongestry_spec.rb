@@ -70,6 +70,11 @@ describe "Mongestry" do
         ancestors.include?(@germany).should be_true
         ancestors.include?(@root).should    be_true
       end
+
+      it 'should return an empty array if called on a root category' do
+        ancestors = Category.where(name: "Root").first.ancestors.to_a
+        ancestors.size.should == 0
+      end
     end
 
     describe '#parent' do
