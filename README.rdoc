@@ -1,9 +1,152 @@
-= mongoancestry
+= Mongestry
 
-Description goes here.
+Mongestry is a gem/plugin that allows the records of a Ruby on Rails MongoDB model to be organized as a tree structure (or hierarchy). It uses a single, intuitively formatted database column, using a variation on the materialised path pattern. It exposes all the standard tree structure relations (ancestors, parent, root, children, siblings, descendants) and all of them can be fetched in a single query. Additional features are scopes, depth caching, depth constraints, easy migration from older plugins/gems.
 
-== Contributing to mongoancestry
- 
+Mongestry is was inspired by the famous {Ancestry}[https://github.com/stefankroes/ancestry] Gem by {Stefan Kroes}[https://github.com/stefankroes]. It implements most of its functionality but lacks some. So be prepared.
+
+= Installation
+
+To apply Mongestry to any MongDB model, follow these simple steps:
+
+== Gem installation
+
+Add Mongestry to your app's Gemfile:
+
+    gem 'mongestry'
+
+Install required gems:
+
+    bundle install
+
+Add mongestry to your model via the following declarative line:
+
+    has_mongestry
+
+== Example
+
+    class Category
+      include Mongoid::Document
+      include Mongoid::Timestamps
+
+      field :name, type: String
+
+      has_mongestry
+    end
+
+Your model is now a tree!
+
+= Organizing records into a tree
+
+You can use the parent attribute to organize your records into a tree. If you have the id of the record you want to use as a parent and don't want to fetch it, you can also use parent_id. Like any virtual model attributes, parent and parent_id can be set using parent= and parent_id= on a record or by including them in the hash passed to new, create, create!. For example:
+
+    TreeNode.create! :name => 'Stinky', :parent => TreeNode.create!(:name => 'Squeeky')
+
+As of now you can <b>NOT</b> create children through the children relation on a node, so be patient, this will come in an upcoming release.
+
+= Navigating your tree
+
+To navigate a Mongestry model, use the following methods on any instance / record:
+
+  parent           Returns the parent of the record, nil for a root node
+  parent_id        Returns the id of the parent of the record, nil for a root node
+  root             Returns the root of the tree the record is in, self for a root node
+  root_id          Returns the id of the root of the tree the record is in
+  is_root?         Returns true if the record is a root node, false otherwise
+  ancestor_ids     Returns a list of ancestor ids, starting with the root id and ending with the parent id
+  ancestors        Scopes the model on ancestors of the record
+  children         Scopes the model on children of the record
+  child_ids        Returns a list of child ids
+  has_children?    Returns true if the record has any children, false otherwise
+  is_childless?    Returns true is the record has no childen, false otherwise
+  siblings         Scopes the model on siblings of the record, the record itself is included
+  sibling_ids      Returns a list of sibling ids
+  has_siblings?    Returns true if the record's parent has more than one child
+  is_only_child?   Returns true if the record is the only child of its parent
+  descendants      Scopes the model on direct and indirect children of the record
+  descendant_ids   Returns a list of a descendant ids
+  subtree          Scopes the model on descendants and itself
+  subtree_ids      Returns a list of all ids in the record's subtree
+  depth            Return the depth of the node, root nodes are at depth 0
+
+= Options for has_mongestry
+
+Currently there are none.
+
+= Scopes
+
+Where possible, the navigation methods return scopes instead of records, this means additional ordering, conditions, limits, etc. can be applied and that the result can be either retrieved, counted or checked for existence. For example:
+
+    node.children.exists?(:name => 'Mary')
+    node.subtree.all(:order => :name, :limit => 10).each do; ...; end
+    node.descendants.count
+
+For convenience, a couple of named scopes are included at the class level:
+
+    roots                   # Root nodes
+    ancestors_of(node)      # Ancestors of node, node can be either a record or an id
+    children_of(node)       # Children of node, node can be either a record or an id
+    descendants_of(node)    # Descendants of node, node can be either a record or an id
+    subtree_of(node)        # Subtree of node, node can be either a record or an id
+    siblings_of(node)       # Siblings of node, node can be either a record or an id
+
+== Selecting nodes by depth
+
+In Mongestry depth caching is enabled by default. Therefore five more scopes can be used to select nodes on their depth:
+
+    before_depth(depth)     # Return nodes that are less deep than depth (node.depth < depth)
+    to_depth(depth)         # Return nodes up to a certain depth (node.depth <= depth)
+    at_depth(depth)         # Return nodes that are at depth (node.depth == depth)
+    from_depth(depth)       # Return nodes starting from a certain depth (node.depth >= depth)
+    after_depth(depth)      # Return nodes that are deeper than depth (node.depth > depth)
+
+The depth scopes are also available through calls to descendants, descendant_ids, subtree, subtree_ids, path and ancestors. In this case, depth values are interpreted relatively. Some examples:
+
+    node.subtree(:to_depth => 2)      # Subtree of node, to a depth of node.depth + 2 (self, children and grandchildren)
+    node.subtree.to_depth(5)          # Subtree of node to an absolute depth of 5
+    node.descendants(:at_depth => 2)  # Descendant of node, at depth node.depth + 2 (grandchildren)
+    node.descendants.at_depth(10)     # Descendants of node at an absolute depth of 10
+    node.ancestors.to_depth(3)        # The oldest 4 ancestors of node (its root and 3 more)
+
+    node.ancestors(:from_depth => -6, :to_depth => -4)
+    node.descendants(:from_depth => 2, :to_depth => 4)
+    node.subtree.from_depth(10).to_depth(12)
+
+Please note that depth constraints cannot be passed to ancestor_ids and path_ids. The reason for this is that both these relations can be fetched directly from the ancestry column without performing a database query. It would require an entirely different method of applying the depth constraints which isn't worth the effort of implementing. You can use ancestors(depth_options).map(&:id) or ancestor_ids.slice(min_depth..max_depth) instead.
+
+= Tests
+
+The Mongestry gem comes with a RSpec test suite consisting of about 190 assertions in about 45 tests. It takes about 0.2 seconds to run on MongoDB. To run it yourself check out the repository from GitHub, check and fix <em>spec/support/connection.rb</em> to your needs and type:
+
+    rake
+
+= Internals
+
+As can be seen in the previous section, Mongestry stores a path from the root to the parent for every node. This is a variation on the materialised path database pattern. It allows Mongestry to fetch any relation (siblings, descendants, etc.) in a single db request without the complicated algorithms and incomprehensibility associated with left and right values. Additionally, any inserts, deletes and updates only affect nodes within the affected node's own subtree.
+
+In the example above, the ancestry field is created as a string. This puts a limitation on the depth of the tree of about 40 or 50 levels, which I think may be enough for most users. To increase the maximum depth of the tree, increase the size of the string that is being used or change it to a text to remove the limitation entirely. Changing it to a text will however decrease performance because an index cannot be put on the column in that case.
+
+= Limitations
+
+Mongestry was created with Rails3 and Ruby >= 1.9.2 in mind. Sorry. You need Rails2 or Ruby prior to 1.9 support? Feel free to fork, fix and request a pull.
+
+= Missing Features
+
+Compared to {Ancestry}[https://github.com/stefankroes/ancestry] there are some missing features.
+
+- Creation of nodes through relational scopes
+- Integrity checking
+- options for <em>has_mongestry</em> (don't know if we need any)
+- STI support
+- arrangement
+- sorting by ancestry
+- migration from other plugins
+- integrity checking and fixing
+- Rails2 support
+- support for Ruby versions < 1.9
+- instance methods: path, path_ids
+
+= Contributing to Mongestry
+
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
 * Fork the project
@@ -12,8 +155,7 @@ Description goes here.
 * Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
 * Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
-== Copyright
+= Copyright
 
-Copyright (c) 2011 Jan Roesner. See LICENSE.txt for
+Copyright (c) 2011 DailyDeal GmbH - Jan Roesner. See LICENSE.txt for
 further details.
-
