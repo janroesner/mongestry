@@ -18,14 +18,13 @@ end
 describe "Mongestry" do
   context "with fixed tree" do
 
-
     before :all do
       Category.destroy_all
       initialize_country_tree
       Category.class_eval{ has_mongestry }
     end
 
-    describe 'has_mongestry' do
+    describe '#has_mongestry' do
 
       it 'should include instance methods into class where invoked' do
         class Foo
@@ -51,8 +50,7 @@ describe "Mongestry" do
       end
     end
 
-
-    describe 'ancestor_ids' do
+    describe '#ancestor_ids' do
       it 'should return the ancestor_ids of the given node' do
         ids = Category.where(name:"Pankow").first.ancestor_ids
 
@@ -63,7 +61,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'ancestors' do
+    describe '#ancestors' do
       it 'should return ancestors of the given node scoped' do
         ancestors = Category.where(name:"Pankow").first.ancestors.to_a
 
@@ -74,7 +72,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'parent' do
+    describe '#parent' do
       it 'should return the given nodes parent' do
         Category.where(name: "Germany").first.parent.should == @root
         Category.where(name: "Pankow").first.parent.should  == @berlin
@@ -82,7 +80,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'parent_id' do
+    describe '#parent_id' do
       it 'should return the given nodes parents id' do
         Category.where(name: "Germany").first.parent_id.should == @root.id
         Category.where(name: "Pankow").first.parent_id.should  == @berlin.id
@@ -90,7 +88,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'root' do
+    describe '#root' do
       it 'should return the root of the tree of the given node' do
         Category.where(name: "Pankow").first.root.should  eql @root
         Category.where(name: "Berlin").first.root.should  eql @root
@@ -99,7 +97,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'root_id' do
+    describe '#root_id' do
       it 'should return the id of the root of the tree of the given node' do
         Category.where(name: "Pankow").first.root_id.should  eql @root.id
         Category.where(name: "Berlin").first.root_id.should  eql @root.id
@@ -108,7 +106,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'is_root?' do
+    describe '#is_root?' do
       it 'should return true if given node is a root' do
         Category.where(name: "Root").first.is_root?.should be_true
       end
@@ -120,7 +118,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'children' do
+    describe '#children' do
       it 'should return the given nodes children scoped' do
         children_scope = Category.where(name: "Germany").first.children
         children_scope.is_a?(Mongoid::Criteria).should     be_true
@@ -131,7 +129,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'child_ids' do
+    describe '#child_ids' do
       it 'should return the given nodes childs ids' do
         ids = Category.where(name: "Germany").first.child_ids
         ids.count.should                      == 3
@@ -141,7 +139,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'has_children?' do
+    describe '#has_children?' do
       it 'should return true if given node has children' do
         Category.where(name: "Root").first.has_children?.should    be_true
         Category.where(name: "Germany").first.has_children?.should be_true
@@ -154,7 +152,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'is_childless?' do
+    describe '#is_childless?' do
       it 'should return true if given node has no children' do
         Category.where(name: "Root").first.is_childless?.should    be_false
         Category.where(name: "Germany").first.is_childless?.should be_false
@@ -167,7 +165,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'siblings' do
+    describe '#siblings' do
       it 'should return the given nodes siblings scoped' do
         siblings_scope = Category.where(name: "Berlin").first.siblings
         siblings_scope.is_a?(Mongoid::Criteria).should be_true
@@ -177,7 +175,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'sibling_ids' do
+    describe '#sibling_ids' do
       it 'should return the given nodes siblings ids' do
         ids = Category.where(name: "Berlin").first.sibling_ids
         ids.size.should == 2
@@ -186,7 +184,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'has_siblings?' do
+    describe '#has_siblings?' do
       it 'should return true if given node has siblings' do
         Category.where(name: "Berlin").first.has_siblings?.should  be_true
         Category.where(name: "Bern").first.has_siblings?.should    be_true
@@ -198,7 +196,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'is_only_child?' do
+    describe '#is_only_child?' do
       it 'should return true if given node has no siblings' do
         Category.where(name: "Berlin").first.is_only_child?.should  be_false
         Category.where(name: "Bern").first.is_only_child?.should    be_false
@@ -210,7 +208,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'descendants' do
+    describe '#descendants' do
       it 'should return the given nodes descendants scoped' do
         desc_scope = Category.where(name: "Germany").first.descendants
         desc_scope.is_a?(Mongoid::Criteria).should be_true
@@ -222,7 +220,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'descendant_ids' do
+    describe '#descendant_ids' do
       it 'should return the given nodes descendants ids' do
         ids = Category.where(name: "Germany").first.descendant_ids
         ids.size.should == 4
@@ -233,7 +231,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'subtree' do
+    describe '#subtree' do
       it 'should return the given nodes subtree including the node itself' do
         subtree_scope = Category.where(name: "Germany").first.subtree
         subtree_scope.is_a?(Mongoid::Criteria).should be_true
@@ -246,7 +244,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'subtree_ids' do
+    describe '#subtree_ids' do
       it 'should return the ids of the given nodes subtree including the code itself' do
         ids = Category.where(name: "Germany").first.subtree_ids
         ids.size.should == 5
@@ -258,7 +256,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'depth' do
+    describe '#depth' do
       it 'should return the computed depth of the given node' do
         Category.all.each do |category|
           category.depth.should == category.persisted_depth
@@ -266,7 +264,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'object_for' do
+    describe '#object_for' do
       it 'should return the correct object if object was given' do
         Category.object_for(Category.where(name: "Berlin").first).should      == @berlin
         Category.object_for(Category.where(name: "Germany").first).should     == @germany
@@ -279,7 +277,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'roots' do
+    describe '#roots' do
       it 'should return all available roots scoped' do
         roots_scope = Category.roots
         roots_scope.is_a?(Mongoid::Criteria).should be_true
@@ -288,7 +286,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'ancestors_of node' do
+    describe '#ancestors_of node' do
       it 'should return the given nodes ancestors scoped' do
         anc_scope = Category.ancestors_of(Category.where(name: "Pankow").first)
         anc_scope.is_a?(Mongoid::Criteria).should be_true
@@ -299,7 +297,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'children_of node' do
+    describe '#children_of node' do
       it 'should return the given nodes children scoped' do
         child_scope = Category.children_of(Category.where(name: "Germany").first)
         child_scope.is_a?(Mongoid::Criteria).should be_true
@@ -310,7 +308,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'descendants_of node' do
+    describe '#descendants_of node' do
       it 'should return the given nodes descendants scoped' do
         desc_scope = Category.descendants_of(Category.where(name: "Germany").first)
         desc_scope.is_a?(Mongoid::Criteria).should be_true
@@ -322,7 +320,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'subtree_of node' do
+    describe '#subtree_of node' do
       it 'should return the given nodes subtree scoped' do
         subtree_scope = Category.subtree_of(Category.where(name: "Germany").first)
         subtree_scope.is_a?(Mongoid::Criteria).should be_true
@@ -335,7 +333,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'siblings_of node' do
+    describe '#siblings_of node' do
       it 'should return the given nodes siblings scoped' do
         siblings_scope = Category.siblings_of(Category.where(name: "Berlin").first)
         siblings_scope.is_a?(Mongoid::Criteria).should be_true
@@ -345,7 +343,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'before_depth depth' do
+    describe '#before_depth depth' do
       it 'should return a scope finding objects with a depth less than given depth' do
         amounts = { 0 => 0, 1 => 1, 2 => 4, 3 => 11, 4 => 12 }
         0.upto(3) do |depth|
@@ -357,7 +355,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'to_depth depth' do
+    describe '#to_depth depth' do
       it 'should return a scope finding objects with a depth less or equal than given depth' do
         amounts = { 0 => 1, 1 => 4, 2 => 11, 3 => 12 }
         0.upto(3) do |depth|
@@ -369,7 +367,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'at_depth depth' do
+    describe '#at_depth depth' do
       it 'should return a scope finding objects with that exact given depth' do
         amounts = { 0 => 1, 1 => 3, 2 => 7, 3 => 1 }
         0.upto(3) do |depth|
@@ -381,7 +379,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'from_depth depth' do
+    describe '#from_depth depth' do
       it 'should return a scope finding objects with a depth greater or equal than given depth' do
         amounts = { 0 => 12, 1 => 11, 2 => 8, 3 => 1 }
         0.upto(3) do |depth|
@@ -393,7 +391,7 @@ describe "Mongestry" do
       end
     end
 
-    describe 'after_depth depth' do
+    describe '#after_depth depth' do
       it 'should return a scope finding objects with a depth greater than given depth' do
         amounts = { 0 => 11, 1 => 8, 2 => 1, 3 => 0 }
         0.upto(3) do |depth|
@@ -404,11 +402,10 @@ describe "Mongestry" do
         end
       end
     end
-
   end
 
   context "with new nodes" do
-    describe 'build_ancestry' do
+    describe '#build_ancestry' do
       it 'should raise an error in case parent and parent_id were given' do
         lambda{ Category.create(name: "Error", parent: Category.first, parent_id: Category.first.id) }.should raise_error "Either parent or parent_id can be given, not both at once"
       end
@@ -437,5 +434,4 @@ describe "Mongestry" do
       end
     end
   end
-
 end
