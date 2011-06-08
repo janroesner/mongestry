@@ -106,52 +106,127 @@ describe "Mongestry" do
   end
 
   describe 'root_id' do
-    it 'should return the id of the root of the tre of the given node'
+    it 'should return the id of the root of the tree of the given node' do
+      Category.where(name: "Pankow").first.root_id.should  eql @root.id
+      Category.where(name: "Berlin").first.root_id.should  eql @root.id
+      Category.where(name: "Germany").first.root_id.should eql @root.id
+      # TODO
+      # Category.where(name: "Root").first.root_id.should    eql @root.id
+    end
   end
 
   describe 'is_root?' do
-    it 'should return true if given node is a root'
-    it 'should return flase if given node is no root'
+    it 'should return true if given node is a root' do
+      Category.where(name: "Root").first.is_root?.should be_true
+    end
+    it 'should return false if given node is no root' do
+      Category.where(name: "Pankow").first.is_root?.should  be_false
+      Category.where(name: "Germany").first.is_root?.should be_false
+      Category.where(name: "Berlin").first.is_root?.should  be_false
+      Category.where(name: "Bern").first.is_root?.should    be_false
+    end
   end
 
   describe 'children' do
-    it 'should return the given nodes children scoped'
+    it 'should return the given nodes children scoped' do
+      children_scope = Category.where(name: "Germany").first.children
+      children_scope.is_a?(Mongoid::Criteria).should     be_true
+      children_scope.count.should                        == 3
+      children_scope.to_a.include?(@berlin).should       be_true
+      children_scope.to_a.include?(@hamburg).should      be_true
+      children_scope.to_a.include?(@munich).should       be_true
+    end
   end
 
   describe 'child_ids' do
-    it 'should return the given nodes childs ids'
+    it 'should return the given nodes childs ids' do
+      ids = Category.where(name: "Germany").first.child_ids
+      ids.count.should                      == 3
+      ids.include?(@berlin.id).should       be_true
+      ids.include?(@hamburg.id).should      be_true
+      ids.include?(@munich.id).should       be_true
+    end
   end
 
   describe 'has_children?' do
-    it 'should return true if given node has children'
-    it 'should return false if given node has no children'
+    it 'should return true if given node has children' do
+      Category.where(name: "Root").first.has_children?.should    be_true
+      Category.where(name: "Germany").first.has_children?.should be_true
+      Category.where(name: "Berlin").first.has_children?.should  be_true
+    end
+    it 'should return false if given node has no children' do
+      Category.where(name: "Pankow").first.has_children?.should be_false
+      Category.where(name: "Bern").first.has_children?.should   be_false
+      Category.where(name: "Zurich").first.has_children?.should be_false
+    end
   end
 
   describe 'is_childless?' do
-    it 'should return true if given node has no children'
-    it 'should return false if given node has children'
+    it 'should return true if given node has no children' do
+      Category.where(name: "Root").first.is_childless?.should    be_false
+      Category.where(name: "Germany").first.is_childless?.should be_false
+      Category.where(name: "Berlin").first.is_childless?.should  be_false
+    end
+    it 'should return false if given node has children' do
+      Category.where(name: "Pankow").first.is_childless?.should be_true
+      Category.where(name: "Bern").first.is_childless?.should   be_true
+      Category.where(name: "Zurich").first.is_childless?.should be_true
+    end
   end
 
   describe 'siblings' do
-    it 'should return the given nodes siblings scoped'
+    it 'should return the given nodes siblings scoped' do
+      siblings_scope = Category.where(name: "Berlin").first.siblings
+      siblings_scope.is_a?(Mongoid::Criteria).should be_true
+      siblings_scope.to_a.size.should == 2
+      siblings_scope.to_a.include?(@hamburg).should  be_true
+      siblings_scope.to_a.include?(@munich).should   be_true
+    end
   end
 
   describe 'sibling_ids' do
-    it 'should return the given nodes siblings ids'
+    it 'should return the given nodes siblings ids' do
+      ids = Category.where(name: "Berlin").first.sibling_ids
+      ids.size.should == 2
+      ids.include?(@hamburg.id).should  be_true
+      ids.include?(@munich.id).should   be_true
+    end
   end
 
   describe 'has_siblings?' do
-    it 'should return true if given node has siblings'
-    it 'should return false if given node has no siblings'
+    it 'should return true if given node has siblings' do
+      Category.where(name: "Berlin").first.has_siblings?.should  be_true
+      Category.where(name: "Bern").first.has_siblings?.should    be_true
+      Category.where(name: "Germany").first.has_siblings?.should be_true
+    end
+    it 'should return false if given node has no siblings' do
+      Category.where(name: "Root").first.has_siblings?.should   be_false
+      Category.where(name: "Pankow").first.has_siblings?.should be_false
+    end
   end
 
   describe 'is_only_child?' do
-    it 'should return true if given node has no siblings'
-    it 'should return false if given node has siblings'
+    it 'should return true if given node has no siblings' do
+      Category.where(name: "Berlin").first.is_only_child?.should  be_false
+      Category.where(name: "Bern").first.is_only_child?.should    be_false
+      Category.where(name: "Germany").first.is_only_child?.should be_false
+    end
+    it 'should return false if given node has siblings' do
+      Category.where(name: "Root").first.is_only_child?.should   be_true
+      Category.where(name: "Pankow").first.is_only_child?.should be_true
+    end
   end
 
   describe 'descendants' do
-    it 'should return the given nodes descendants scoped'
+    it 'should return the given nodes descendants scoped' do
+      desc_scope = Category.where(name: "Germany").first.descendants
+      desc_scope.is_a?(Mongoid::Criteria).should be_true
+      desc_scope.to_a.size.should == 4
+      desc_scope.to_a.include?(@berlin).should   be_true
+      desc_scope.to_a.include?(@hamburg).should  be_true
+      desc_scope.to_a.include?(@munich).should   be_true
+      desc_scope.to_a.include?(@pankow).should  be_true
+    end
   end
 
   describe 'descendant_ids' do
