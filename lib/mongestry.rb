@@ -37,6 +37,7 @@ module Mongestry
 
     # Scopes the model on ancestors of the record
     def ancestors
+      return [] if self.is_root?
       self.class.where(_id: {"$in" => self.ancestor_ids})
     end
 
