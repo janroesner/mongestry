@@ -4,6 +4,7 @@ module Mongestry
     def has_mongestry
       include Mongestry::InstanceMethods
       field :ancestry, type: String
+      index :ancestry
       field :persisted_depth, type: Integer
       before_create :build_ancestry
     end
