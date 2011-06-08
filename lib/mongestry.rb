@@ -41,17 +41,17 @@ module Mongestry
 
     # Returns the parent of the record, nil for a root node
     def parent
-      self.class.where(_id: self.ancestry.split('/').last) rescue nil
+      self.class.where(_id: self.ancestry.split('/').last).first rescue nil
     end
 
     # Returns the id of the parent of the record, nil for a root node
     def parent_id
-      self.parent.first.id rescue nil
+      self.parent.id rescue nil
     end
 
     # Returns the root of the tree the record is in, self for a root node
     def root
-      return self if self.ancestry.nil?
+      return self unless self.ancestry
       self.class.where(_id: self.ancestry.split('/').first).first
     end
 

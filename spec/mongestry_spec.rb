@@ -76,8 +76,8 @@ describe "Mongestry" do
 
     describe 'parent' do
       it 'should return the given nodes parent' do
-        Category.where(name: "Germany").first.parent.first.should == @root
-        Category.where(name: "Pankow").first.parent.first.should  == @berlin
+        Category.where(name: "Germany").first.parent.should == @root
+        Category.where(name: "Pankow").first.parent.should  == @berlin
         Category.roots.first.parent.should be_nil
       end
     end
