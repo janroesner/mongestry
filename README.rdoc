@@ -115,7 +115,7 @@ Please note that depth constraints cannot be passed to ancestor_ids and path_ids
 
 == Tests
 
-The Mongestry gem comes with a RSpec test suite consisting of about 190 assertions in about 45 tests. It takes about 0.2 seconds to run on MongoDB. To run it yourself check out the repository from GitHub, check and fix _spec/support/connection.rb_ to your needs and type:
+The Mongestry gem comes with a RSpec test suite consisting of about 190 assertions in about 45 tests. It takes about 0.2 seconds to run on MongoDB. To run it yourself check out the repository from GitHub, check and fix __spec/support/connection.rb__ to your needs and type:
 
     rake
 
