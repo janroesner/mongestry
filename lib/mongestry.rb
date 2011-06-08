@@ -143,6 +143,7 @@ module Mongestry
   module ClassMethods
 
     def object_for identifier
+      return nil if identifier == ""
       case identifier
       when BSON::ObjectId
         self.find identifier
