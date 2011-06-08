@@ -285,6 +285,9 @@ describe "Mongestry" do
         Category.object_for(Category.where(name: "Germany").first.id.to_s).should     == @germany
         Category.object_for(Category.where(name: "Root").first.id.to_s).should        == @root
       end
+      it 'should return nil in case an empty string is given as object_id' do
+        Category.object_for("").should be_nil
+      end
     end
 
     describe '#roots' do
