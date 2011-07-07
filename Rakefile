@@ -18,9 +18,9 @@ Jeweler::Tasks.new do |gem|
   gem.homepage = "http://github.com/DailyDeal/mongestry"
   gem.license = "MIT"
   gem.summary = %Q{Mongestry is Ancestry for Mongo}
-  gem.description = %Q{See summary}
-  gem.email = "jan@roesner.it"
-  gem.authors = ["Jan Roesner"]
+  gem.description = %Q{Mongestry is Ancestry for Mongo, build for ORM Mongoid}
+  gem.email = %q{jan.roesner@dailydeal.de lars.kluge@dailydeal.de}
+  gem.authors = ["Jan Roesner", "Lars Kluge"]
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new
