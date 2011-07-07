@@ -8,10 +8,10 @@ Gem::Specification.new do |s|
   s.version = "0.5.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Jan Roesner"]
+  s.authors = ["Jan Roesner, Lars Kluge"]
   s.date = %q{2011-06-08}
-  s.description = %q{See summary}
-  s.email = %q{jan@roesner.it}
+  s.description = %q{Mongestry is Ancestry for Mongo, build for ORM Mongoid}
+  s.email = %q{jan.roesner@dailydeal.de lars.kluge@dailydeal.de}
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"

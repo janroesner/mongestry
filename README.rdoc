@@ -1,12 +1,12 @@
 = Mongestry
 
-Mongestry is a gem/plugin that allows the records of a Ruby on Rails MongoDB model to be organized as a tree structure (or hierarchy). It uses a single, intuitively formatted database column, using a variation on the materialised path pattern. It exposes all the standard tree structure relations (ancestors, parent, root, children, siblings, descendants) and all of them can be fetched in a single query. Additional features are scopes, depth caching, depth constraints, easy migration from older plugins/gems.
+Mongestry is a gem that allows the records of a Mongoid model to be organized as a tree structure (or hierarchy). It uses a single, intuitively formatted database column, using a variation on the materialised path pattern. It exposes all the standard tree structure relations (ancestors, parent, root, children, siblings, descendants) and all of them can be fetched in a single query. Additional features are scopes, depth caching, depth constraints, easy migration from similar plugins/gems.
 
-Mongestry is was inspired by the famous {Ancestry}[https://github.com/stefankroes/ancestry] Gem by {Stefan Kroes}[https://github.com/stefankroes]. It implements most of its functionality but lacks some. So be prepared.
+Mongestry is inspired by the famous {Ancestry}[https://github.com/stefankroes/ancestry] gem by {Stefan Kroes}[https://github.com/stefankroes]. It implements most of its functionality but lacks some. So be prepared.
 
 = Installation
 
-To apply Mongestry to any MongDB model, follow these simple steps:
+To apply Mongestry to any Mongoid model, follow these simple steps:
 
 == Gem installation
 
@@ -24,7 +24,7 @@ Add mongestry to your model via the following declarative line:
 
 == Example
 
-    class Category
+    class TreeNode
       include Mongoid::Document
       include Mongoid::Timestamps
 
@@ -115,7 +115,7 @@ Please note that depth constraints cannot be passed to ancestor_ids and path_ids
 
 = Tests
 
-The Mongestry gem comes with a RSpec test suite consisting of about 190 assertions in about 45 tests. It takes about 0.2 seconds to run on MongoDB. To run it yourself check out the repository from GitHub, check and fix <em>spec/support/connection.rb</em> to your needs and type:
+The Mongestry gem comes with a RSpec test suite consisting of about 190+ assertions in about 45+ tests. It takes about 0.2 seconds to run on MongoDB. To run it yourself check out the repository from GitHub, check and fix <em>spec/support/connection.rb</em> to your needs and type:
 
     rake
 
@@ -153,9 +153,9 @@ Compared to {Ancestry}[https://github.com/stefankroes/ancestry] there are some m
 * Start a feature/bugfix branch
 * Commit and push until you are happy with your contribution
 * Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
-* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so we can cherry-pick around it.
 
 = Copyright
 
-Copyright (c) 2011 DailyDeal GmbH - Jan Roesner. See LICENSE.txt for
-further details.
+Copyright (c) 2011 DailyDeal GmbH. See LICENSE.txt for further details.
+
