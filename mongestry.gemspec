@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Jan Roesner}, %q{Lars Kluge}]
-  s.date = %q{2011-07-07}
+  s.date = %q{2011-07-08}
   s.description = %q{Mongestry is Ancestry for Mongo, build for ORM Mongoid}
   s.email = %q{jan.roesner@dailydeal.de lars.kluge@dailydeal.de}
   s.extra_rdoc_files = [
